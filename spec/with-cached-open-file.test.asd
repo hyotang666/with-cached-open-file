@@ -1,6 +1,7 @@
 ; vim: ft=lisp et
 (in-package :asdf)
 (defsystem :with-cached-open-file.test
+  :version "0.0.0"
   :depends-on
   (:jingoh "with-cached-open-file")
   :components
