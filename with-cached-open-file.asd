@@ -1,7 +1,7 @@
 ; vim: ft=lisp et
 (in-package :asdf)
 (defsystem "with-cached-open-file"
-  :version "0.1.3"
+  :version "0.1.4"
   :depends-on
   nil
   :pathname
@@ -9,7 +9,7 @@
   :components
   ((:file "with-cached-open-file")))
 
-;; These two methods below are added by JINGOH.GENERATOR.
+;; These forms below are added by JINGOH.GENERATOR.
 (in-package :asdf)
 (defmethod component-depends-on
            ((o test-op) (c (eql (find-system "with-cached-open-file"))))
@@ -32,3 +32,21 @@
     (let ((args (jingoh.args keys)))
       (declare (special args))
       (call-next-method))))
+(let ((system (find-system "jingoh.documentizer" nil)))
+  (when system
+    (load-system system)
+    (defmethod operate :around
+               ((o load-op) (c (eql (find-system "with-cached-open-file")))
+                &key)
+      (let* ((forms nil)
+             (*macroexpand-hook*
+              (let ((outer-hook *macroexpand-hook*))
+                (lambda (expander form env)
+                  (when (typep form '(cons (eql defpackage) *))
+                    (push form forms))
+                  (funcall outer-hook expander form env))))
+             (*default-pathname-defaults*
+              (merge-pathnames "spec/" (system-source-directory c))))
+        (multiple-value-prog1 (call-next-method)
+          (mapc (find-symbol (string :importer) :jingoh.documentizer)
+                forms))))))
