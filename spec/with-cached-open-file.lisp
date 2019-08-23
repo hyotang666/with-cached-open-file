@@ -32,7 +32,9 @@
 ; Evaluated.
 #?(with-cached-open-file(*standard-input* no-such-var)
     "dummy body")
-:signals error
+:signals (or error
+	     warning ; for ccl
+	     )
 
 ; params := Almost same with CL:OPEN, but :direction.
 ; When :direction is specified, and it is :output,
