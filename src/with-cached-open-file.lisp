@@ -5,6 +5,7 @@
 (in-package :with-cached-open-file)
 
 (let((>cache<(make-hash-table :test #'equal)))
+  ;; as type of { string : (cons fixnum t) }
   (defun call-with-cached-open-file(path thunk)
     (flet((read-with-cache(path)
 	    (let((contents(funcall thunk)))
