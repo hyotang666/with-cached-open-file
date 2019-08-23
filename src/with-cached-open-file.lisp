@@ -1,7 +1,9 @@
 (in-package :cl-user)
 (defpackage :with-cached-open-file
   (:use :cl)
-  (:export))
+  (:export
+    #:with-cached-open-file
+    ))
 (in-package :with-cached-open-file)
 
 (let((>cache<(make-hash-table :test #'equal)))
