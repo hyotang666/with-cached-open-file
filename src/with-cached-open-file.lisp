@@ -24,6 +24,7 @@
 	    (values-list(cdr cache))))))))
 
 (defmacro with-cached-open-file((stream path &rest params)&body body)
+  (assert(not(eq :output (getf params :direction))))
   (let((gpath(gensym"PATHNAME")))
     `(let((,gpath ,path))
        (call-with-cached-open-file
